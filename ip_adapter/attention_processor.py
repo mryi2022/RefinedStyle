@@ -657,18 +657,6 @@ class my_IPAttnProcessor2_0(torch.nn.Module):
         key = key.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)            # torch.Size([2, 10 / 20, 77, 64])
         value = value.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)        # torch.Size([2, 10 / 20, 77, 64])
 
-        # F.scaled_dot_product_attention
-        # L, S = query.size(-2), key.size(-2)
-        # scale_factor = 1 / math.sqrt(query.size(-1))
-        # attn_bias = torch.zeros(L, S, dtype=query.dtype, device=query.device)
-        # attn_weight = query @ key.transpose(-2, -1) * scale_factor
-        # attn_weight += attn_bias
-        # attn_weight = torch.softmax(attn_weight, dim=-1)
-        # dropout_p = 0.0
-        # attn_weight = torch.dropout(attn_weight, dropout_p, train=True)
-        # hidden_states = attn_weight @ value
-        # [2, ,20 1024, 64]
-
         # # the output of sdp = (batch, num_heads, seq_len, head_dim)
         # # TODO: add support for attn.scale when we move to Torch 2.1
         hidden_states = F.scaled_dot_product_attention(
@@ -679,7 +667,7 @@ class my_IPAttnProcessor2_0(torch.nn.Module):
         hidden_states = hidden_states.to(query.dtype)           # [2, 1024, 1280]
 
         # if not self.skip:
-        if (not self.skip) and (self.denoise_step <= 50):
+        if (not self.skip) and (self.denoise_step <= 20):
             # for ip-adapter
             ip_key = self.to_k_ip(ip_hidden_states)
             ip_value = self.to_v_ip(ip_hidden_states)
@@ -687,6 +675,7 @@ class my_IPAttnProcessor2_0(torch.nn.Module):
             ip_key = ip_key.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
             ip_value = ip_value.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
 
+            # semantic fusion
             ip_key = torch.cat((ip_key, key[:, :, 0:5, :]), dim=-2)
             ip_value = torch.cat((ip_value, value[:, :, 0:5, :]), dim=-2)
 
