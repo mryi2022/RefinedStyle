@@ -4,14 +4,16 @@
 This code is provided for **RefinedStyle**. RefinedStyle enhances semantic integration by injecting textual context into the key and value components of style features. Furthermore, it reconstructs the style features via AdaIN to enable their smooth transfer to the textual attention. Experimental results further confirm that RefinedStyle achieves strong text-image alignment while maintaining consistent style transfer.
 ---
 ## Framework
+![Frame](/asset/frame.jpg)
 
 ## Results
+![Results](/asset/Result.jpg)
 
 ### 1. Download
 ```bash
 # git clone this repository
-git clone https://github.com/math-ddup/StyleBoost.git
-cd StyleBoost
+git clone https://github.com/mryi2022/RefinedStyle.git
+cd RefinedStyle
 
 # download the models
 git lfs install
