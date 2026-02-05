@@ -7,7 +7,6 @@ from diffusers.pipelines.controlnet import MultiControlNetModel
 from PIL import Image
 from safetensors import safe_open
 from transformers import CLIPImageProcessor, CLIPVisionModelWithProjection
-import torch_dct
 
 from .utils import is_torch2_available, get_generator
 
